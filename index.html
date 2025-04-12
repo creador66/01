@@ -1,523 +1,536 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="utf-8">
-  <title>PLANTILLA | WEB 1</title>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <meta content="" name="keywords">
-  <meta content="" name="description">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Productos - Diseño Simple</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Fuente moderna -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #ffffff;
+      --accent-color: #2980b9;
+      --text-color: #333;
+      --bg-color: #ecf0f1;
+      --border-color: #bdc3c7;
+      --success-bg: #d4edda;
+      --success-text: #155724;
+      --error-bg: #f8d7da;
+      --error-text: #721c24;
+    }
 
-  <!-- Facebook Opengraph integration: https://developers.facebook.com/docs/sharing/opengraph -->
-  <meta property="og:title" content="">
-  <meta property="og:image" content="">
-  <meta property="og:url" content="">
-  <meta property="og:site_name" content="">
-  <meta property="og:description" content="">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  <!-- Twitter Cards integration: https://dev.twitter.com/cards/  -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="">
-  <meta name="twitter:title" content="">
-  <meta name="twitter:description" content="">
-  <meta name="twitter:image" content="">
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
 
-  <!-- Place your favicon.ico and apple-touch-icon.png in the template root directory -->
-  <link href="favicon.ico" rel="shortcut icon">
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--secondary-color);
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800" rel="stylesheet">
+    h2 {
+      margin-bottom: 1rem;
+      font-weight: 500;
+      color: var(--primary-color);
+    }
 
-  <!-- Bootstrap CSS File -->
-  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    /* Botón flotante */
+    .open-modal {
+      padding: 0.75rem 1.2rem;
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .open-modal:hover {
+      background-color: var(--accent-color);
+    }
+    /* Posicionamiento fijo para que el botón se mantenga en pantalla */
+    .floating-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+    }
 
-  <!-- Libraries CSS Files -->
-  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <link href="lib/animate-css/animate.min.css" rel="stylesheet">
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      padding: 1rem;
+    }
 
-  <!-- Main Stylesheet File -->
-  <link href="css/style.css" rel="stylesheet">
+    .modal-content {
+      background-color: var(--secondary-color);
+      margin: 5% auto;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      max-width: 600px;
+      border-radius: 8px;
+      position: relative;
+    }
 
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      color: var(--border-color);
+      cursor: pointer;
+    }
+    .close-modal:hover {
+      color: var(--primary-color);
+    }
+
+    /* Formularios */
+    form label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    form input,
+    form textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    form input:focus,
+    form textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    form button {
+      padding: 0.7rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-right: 0.5rem;
+      color: var(--secondary-color);
+      background-color: var(--primary-color);
+    }
+
+    form button:hover {
+      background-color: var(--accent-color);
+    }
+
+    form button[type="button"] {
+      background-color: #7f8c8d;
+    }
+
+    form button[type="button"]:hover {
+      background-color: #95a5a6;
+    }
+
+    /* Mensajes */
+    .message {
+      margin: 1rem 0;
+      padding: 0.75rem 1rem;
+      border: 1px solid;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .message.success {
+      background-color: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-text);
+    }
+    .message.error {
+      background-color: var(--error-bg);
+      color: var(--error-text);
+      border-color: var(--error-text);
+    }
+
+    /* Tarjetas de productos */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .card {
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--secondary-color);
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .card img {
+      max-width: 100%;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+      object-fit: cover;
+      height: 150px;
+    }
+
+    .card h3 {
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin-bottom: 0.5rem;
+      font-size: 10px;
+    }
+
+    .card .price {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: red;
+      font-size: ;
+    }
+    .card .actions button {
+      padding: 0.4rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-right: 0.5rem;
+      transition: background-color 0.3s;
+      color: var(--secondary-color);
+    }
+
+    .card .actions button.edit {
+      background-color: var(--primary-color);
+    }
+    .card .actions button.delete {
+      background-color: #e74c3c;
+    }
+    #nuevaCategoriaContainer {
+      display: none;
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
-
 <body>
-  <div id="preloader"></div>
-
-  <!--==========================
-  Hero Section
-  ============================-->
-  <section id="hero">
-    <div class="hero-container">
-      <div class="wow fadeIn">
-        <div class="hero-logo">
-          <img class="" src="img/logo.png" alt="ProOnliPc">
-        </div>
-
-        <h1>Welcome to ProOnliPc studios</h1>
-        <h2>We create <span class="rotating">beautiful graphics, functional websites, working mobile apps</span></h2>
-        <div class="actions">
-          <a href="#about" class="btn-get-started">Get Strated</a>
-          <a href="#services" class="btn-services">Our Services</a>
-        </div>
-      </div>
+  <div class="container">
+    <div id="message"></div>
+    <h2>Productos</h2>
+    <div class="cards-container" id="productsCards">
+      <!-- Tarjetas de productos -->
     </div>
-  </section>
+  </div>
 
-  <!--==========================
-  Sección de encabezado
-  ============================-->
-  <header id="header">
-    <div class="container">
-      <div id="logo" class="pull-left">
-        <a href="#hero"><img src="img/logo.png" alt="" title="" /></img></a>
-        <!-- Descomenta abajo si prefieres usar una imagen de texto -->
-        <!--<h1><a href="#hero">Encabezado 1</a></h1>-->
-      </div>
-
-      <nav id="nav-menu-container">
-        <ul class="nav-menu">
-          <li class="menu-active"><a href="#hero">Home</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#portfolio">Portfolio</a></li>
-          <li><a href="#testimonials">Testimonials</a></li>
-          <li><a href="#team">Team</a></li>
-          <li class="menu-has-children"><a href="">Drop Down</a>
-            <ul>
-              <li><a href="#">Drop Down 1</a></li>
-              <li class="menu-has-children"><a href="#">Drop Down 2</a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li>
-              <li><a href="#">Drop Down 5</a></li>
-            </ul>
-          </li>
-          <li><a href="#contact">Contact Us</a></li>
-        </ul>
-      </nav>
-      <!-- #nav-menu-container -->
-    </div>
-  </header>
-  <!-- #header -->
-
-  <!--==========================
-  About Section
-  ============================-->
-  <section id="about">
-    <div class="container wow fadeInUp">
-      <div class="row">
-        <div class="col-md-12">
-          <h3 class="section-title">About Us</h3>
-          <div class="section-title-divider"></div>
-          <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam</p>
-        </div>
-      </div>
-    </div>
-    <div class="container about-container wow fadeInUp">
-      <div class="row">
-        <div class="col-md-6 col-md-push-6 about-content">
-          <h2 class="about-title">We provide great services and ideass</h2>
-          <p class="about-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-            in reprehenderit in voluptate
-          </p>
-          <p class="about-text">
-            Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-            id est laborum
-          </p>
-          <p class="about-text">
-            Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-            id est laborum
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!--==========================
-  Services Section
-  ============================-->
-  <section id="services">
-    <div class="container wow fadeInUp">
-      <div class="row">
-        <div class="col-md-12">
-          <h3 class="section-title">Our Services</h3>
-          <div class="section-title-divider"></div>
-          <p class="section-description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4 service-item">
-          <div class="service-icon"><i class="fa fa-desktop"></i></div>
-          <h4 class="service-title"><a href="">Lorem Ipsum</a></h4>
-          <p class="service-description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
-        </div>
-        <div class="col-md-4 service-item">
-          <div class="service-icon"><i class="fa fa-bar-chart"></i></div>
-          <h4 class="service-title"><a href="">Dolor Sitema</a></h4>
-          <p class="service-description">Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat tarad limino ata</p>
-        </div>
-        <div class="col-md-4 service-item">
-          <div class="service-icon"><i class="fa fa-paper-plane"></i></div>
-          <h4 class="service-title"><a href="">Sed ut perspiciatis</a></h4>
-          <p class="service-description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
-        </div>
-        <div class="col-md-4 service-item">
-          <div class="service-icon"><i class="fa fa-photo"></i></div>
-          <h4 class="service-title"><a href="">Magni Dolores</a></h4>
-          <p class="service-description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-        </div>
-        <div class="col-md-4 service-item">
-          <div class="service-icon"><i class="fa fa-road"></i></div>
-          <h4 class="service-title"><a href="">Nemo Enim</a></h4>
-          <p class="service-description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque</p>
-        </div>
-        <div class="col-md-4 service-item">
-          <div class="service-icon"><i class="fa fa-shopping-bag"></i></div>
-          <h4 class="service-title"><a href="">Eiusmod Tempor</a></h4>
-          <p class="service-description">Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!--==========================
-  Subscrbe Section
-  ============================-->
-  <section id="subscribe">
-    <div class="container wow fadeInUp">
-      <div class="row">
-        <div class="col-md-8">
-          <h3 class="subscribe-title">Subscribe For Updates</h3>
-          <p class="subscribe-text">Join our 1000+ subscribers and get access to the latest tools, freebies, product announcements and much more!</p>
-        </div>
-        <div class="col-md-4 subscribe-btn-container">
-          <a class="subscribe-btn" href="#">Subscribe Now</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!--==========================
-  Porfolio Section
-  ============================-->
-  <section id="portfolio">
-    <div class="container wow fadeInUp">
-      <div class="row">
-        <div class="col-md-12">
-          <h3 class="section-title">Portfolio</h3>
-          <div class="section-title-divider"></div>
-          <p class="section-description">Si stante, hoc natura videlicet vult, salvam esse se, quod concedimus ses haec dicturum fuisse</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-3">
-          <a class="portfolio-item" style="background-image: url(img/portfolio-1.jpg);" href="">
-            <div class="details">
-              <h4>Portfolio 1</h4>
-              <span>Alored dono par</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-3">
-          <a class="portfolio-item" style="background-image: url(img/portfolio-2.jpg);" href="">
-            <div class="details">
-              <h4>Portfolio 2</h4>
-              <span>Alored dono par</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-3">
-          <a class="portfolio-item" style="background-image: url(img/portfolio-3.jpg);" href="">
-            <div class="details">
-              <h4>Portfolio 3</h4>
-              <span>Alored dono par</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-3">
-          <a class="portfolio-item" style="background-image: url(img/portfolio-4.jpg);" href="">
-            <div class="details">
-              <h4>Portfolio 4</h4>
-              <span>Alored dono par</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-3">
-          <a class="portfolio-item" style="background-image: url(img/portfolio-5.jpg);" href="">
-            <div class="details">
-              <h4>Portfolio 5</h4>
-              <span>Alored dono par</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-3">
-          <a class="portfolio-item" style="background-image: url(img/portfolio-6.jpg);" href="">
-            <div class="details">
-              <h4>Portfolio 6</h4>
-              <span>Alored dono par</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-3">
-          <a class="portfolio-item" style="background-image: url(img/portfolio-7.jpg);" href="">
-            <div class="details">
-              <h4>Portfolio 7</h4>
-              <span>Alored dono par</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-3">
-          <a class="portfolio-item" style="background-image: url(img/portfolio-8.jpg);" href="">
-            <div class="details">
-              <h4>Portfolio 8</h4>
-              <span>Alored dono par</span>
-            </div>
-          </a>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!--==========================
-  Testimonials Section
-  ============================-->
-  <section id="testimonials">
-    <div class="container wow fadeInUp">
-      <div class="row">
-        <div class="col-md-12">
-          <h3 class="section-title">Testimonials</h3>
-          <div class="section-title-divider"></div>
-          <p class="section-description">Erdo lide, nora porodo filece, salvam esse se, quod concedimus ses haec dicturum fuisse</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-3">
-          <div class="profile">
-            <div class="pic"><img src="img/client-1.jpg" alt=""></div>
-            <h4>Saul Goodman</h4>
-            <span>Lawless Inc</span>
-          </div>
-        </div>
-        <div class="col-md-9">
-          <div class="quote">
-            <b><img src="img/quote_sign_left.png" alt=""></b> Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper. <small><img src="img/quote_sign_right.png" alt=""></small>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-9">
-          <div class="quote">
-            <b><img src="img/quote_sign_left.png" alt=""></b> Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis architecto beatae. <small><img src="img/quote_sign_right.png" alt=""></small>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="profile">
-            <div class="pic"><img src="img/client-2.jpg" alt=""></div>
-            <h4>Sara Wilsson</h4>
-            <span>Odeo Inc</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!--==========================
-  Team Section
-  ============================-->
-  <section id="team">
-    <div class="container wow fadeInUp">
-      <div class="row">
-        <div class="col-md-12">
-          <h3 class="section-title">Our Team</h3>
-          <div class="section-title-divider"></div>
-          <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-3">
-          <div class="member">
-            <div class="pic"><img src="img/team-1.jpg" alt=""></div>
-            <h4>Walter White</h4>
-            <span>Chief Executive Officer</span>
-            <div class="social">
-              <a href=""><i class="fa fa-twitter"></i></a>
-              <a href=""><i class="fa fa-facebook"></i></a>
-              <a href=""><i class="fa fa-google-plus"></i></a>
-              <a href=""><i class="fa fa-linkedin"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <div class="member">
-            <div class="pic"><img src="img/team-2.jpg" alt=""></div>
-            <h4>Sarah Jhinson</h4>
-            <span>Product Manager</span>
-            <div class="social">
-              <a href=""><i class="fa fa-twitter"></i></a>
-              <a href=""><i class="fa fa-facebook"></i></a>
-              <a href=""><i class="fa fa-google-plus"></i></a>
-              <a href=""><i class="fa fa-linkedin"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <div class="member">
-            <div class="pic"><img src="img/team-3.jpg" alt=""></div>
-            <h4>William Anderson</h4>
-            <span>CTO</span>
-            <div class="social">
-              <a href=""><i class="fa fa-twitter"></i></a>
-              <a href=""><i class="fa fa-facebook"></i></a>
-              <a href=""><i class="fa fa-google-plus"></i></a>
-              <a href=""><i class="fa fa-linkedin"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-3">
-          <div class="member">
-            <div class="pic"><img src="img/team-4.jpg" alt=""></div>
-            <h4>Amanda Jepson</h4>
-            <span>Accountant</span>
-            <div class="social">
-              <a href=""><i class="fa fa-twitter"></i></a>
-              <a href=""><i class="fa fa-facebook"></i></a>
-              <a href=""><i class="fa fa-google-plus"></i></a>
-              <a href=""><i class="fa fa-linkedin"></i></a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!--==========================
-  Contact Section
-  ============================-->
-  <section id="contact">
-    <div class="container wow fadeInUp">
-      <div class="row">
-        <div class="col-md-12">
-          <h3 class="section-title">Contact Us</h3>
-          <div class="section-title-divider"></div>
-          <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-3 col-md-push-2">
-          <div class="info">
-            <div>
-              <i class="fa fa-map-marker"></i>
-              <p>A108 Adam Street<br>New York, NY 535022</p>
-            </div>
-
-            <div>
-              <i class="fa fa-envelope"></i>
-              <p>info@example.com</p>
-            </div>
-
-            <div>
-              <i class="fa fa-phone"></i>
-              <p>+1 5589 55488 55s</p>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="col-md-5 col-md-push-2">
-          <div class="form">
-            <div id="sendmessage">Your message has been sent. Thank you!</div>
-            <div id="errormessage"></div>
-            <form action="" method="post" role="form" class="contactForm">
-              <div class="form-group">
-                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Por favor ingrese al menos 4 caracteres" />
-                <div class="validation"></div>
-              </div>
-              <div class="form-group">
-                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Ingresa un Correo Valido" />
-                <div class="validation"></div>
-              </div>
-              <div class="form-group">
-                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Por favor ingrese al menos 8 caracteres del tema" />
-                <div class="validation"></div>
-              </div>
-              <div class="form-group">
-                <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Por favor escribe algo para nosotros" placeholder="Message"></textarea>
-                <div class="validation"></div>
-              </div>
-              <div class="text-center"><button type="submit">Enviar mensaje</button></div>
-            </form>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!--==========================
-  Footer
-============================-->
-  <footer id="footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="copyright">
-            &copy; Copyright <strong>comercio carmen</strong>. integrate al comercio
-          </div>
-          <div class="credits">
+  <button class="open-modal floating-btn" onclick="openModal('add')">Agregar Producto</button>
+  
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Agregar Producto</h2>
+      <form id="productForm">
+        <input type="hidden" id="formMode" value="add">
         
-            dettoven <a href="https://www.facebook.com/dettoven/?ref=pages_you_manage">comercio en linea</a>
-          </div>
+        <label for="productoId">ID del Producto:</label>
+        <input type="text" id="productoId" required>
+        
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" required>
+        
+        <label for="precio">Precio:</label>
+        <input type="number" id="precio" step="0.01" required>
+        
+        <!-- Reemplazamos el input de categoría por un select -->
+        <label for="categoriaSelect">Categoría:</label>
+        <select id="categoriaSelect"></select>
+        <!-- Contenedor para nueva categoría -->
+        <div id="nuevaCategoriaContainer">
+          <label for="nuevaCategoria">Nueva Categoría:</label>
+          <input type="text" id="nuevaCategoria" placeholder="Escribe la nueva categoría">
         </div>
-      </div>
+        
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion"></textarea>
+        
+        <label for="imagen">URL de la Imagen:</label>
+        <input type="text" id="imagen">
+        
+        <button type="submit" id="submitBtn">Agregar Producto</button>
+        <button type="button" id="cancelEdit" onclick="resetForm(); closeModal()" style="display: none;">Cancelar Edición</button>
+      </form>
     </div>
-  </footer>
-  <!-- #footer -->
+  </div>
 
-  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+  <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxbUpFOZFzpPHy8NKr5_2s9EO9eD048G4ep1eqN9QKM_Jbdifz8aujVi3v8ym_HrBV0/exec";
+    let productsData = [];
 
-  <!-- Required JavaScript Libraries -->
-  <script src="lib/jquery/jquery.min.js"></script>
-  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
-  <script src="lib/superfish/hoverIntent.js"></script>
-  <script src="lib/superfish/superfish.min.js"></script>
-  <script src="lib/morphext/morphext.min.js"></script>
-  <script src="lib/wow/wow.min.js"></script>
-  <script src="lib/stickyjs/sticky.js"></script>
-  <script src="lib/easing/easing.js"></script>
+    function showMessage(msg, isError = false) {
+      const messageDiv = document.getElementById("message");
+      messageDiv.textContent = msg;
+      messageDiv.className = "message " + (isError ? "error" : "success");
+      setTimeout(() => {
+        messageDiv.textContent = "";
+        messageDiv.className = "";
+      }, 3000);
+    }
 
-  <!-- Template Specisifc Custom Javascript File -->
-  <script src="js/custom.js"></script>
+    async function loadProducts() {
+      // Cargar productos desde localStorage
+      const storedProducts = localStorage.getItem("productsData");
+      if (storedProducts) {
+        productsData = JSON.parse(storedProducts);
+        populateProducts(productsData);
+        populateCategorySelect(productsData);
+      }
+      
+      // Petición al servidor para obtener productos actualizados
+      try {
+        const formData = new FormData();
+        formData.append("id", "obtenerMenu");
+        const response = await fetch(GAS_URL, { method: "POST", body: formData });
+        const result = await response.json();
+        if (result.status === "success") {
+          productsData = result.data.productos;
+          localStorage.setItem("productsData", JSON.stringify(productsData));
+          populateProducts(productsData);
+          populateCategorySelect(productsData);
+        } else {
+          showMessage(result.message, true);
+        }
+      } catch (error) {
+        showMessage(error.message, true);
+      }
+    }
 
-  <script src="contactform/contactform.js"></script>
+    function populateProducts(products) {
+      const productsCards = document.getElementById("productsCards");
+      productsCards.innerHTML = "";
+      products.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${product.imagen}" alt="${product.nombre}">
+          <h3>${product.nombre}</h3>
+          <p class="price">$${product.precio}</p>
+          <p><strong>Categoría:</strong> ${product.categoria}</p>
+          <p>${product.descripcion.length > 100 ? product.descripcion.substring(0, 100) + "..." : product.descripcion}</p>
+          <div class="actions">
+            <button class="edit" onclick="openModal('edit', '${product.id}')">Editar</button>
+            <button class="delete" onclick="deleteProduct('${product.id}')">Eliminar</button>
+          </div>
+        `;
+        productsCards.appendChild(card);
+      });
+    }
 
+    // Función para extraer las categorías únicas y poblar el select
+    function populateCategorySelect(products) {
+      const categoriaSelect = document.getElementById("categoriaSelect");
+      // Limpiar opciones actuales
+      categoriaSelect.innerHTML = "";
+      // Extraer categorías únicas
+      const categoriasUnicas = [];
+      products.forEach(product => {
+        const categoria = product.categoria.trim();
+        if (categoria && !categoriasUnicas.includes(categoria)) {
+          categoriasUnicas.push(categoria);
+        }
+      });
+      
+      // Crear opción por defecto
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "-- Seleccionar Categoría --";
+      categoriaSelect.appendChild(defaultOption);
+      
+      // Agregar cada categoría única
+      categoriasUnicas.forEach(categoria => {
+        const option = document.createElement("option");
+        option.value = categoria;
+        option.textContent = categoria;
+        categoriaSelect.appendChild(option);
+      });
+      
+      // Agregar opción para "nueva categoría"
+      const nuevaOption = document.createElement("option");
+      nuevaOption.value = "nueva";
+      nuevaOption.textContent = "Nueva Categoría";
+      categoriaSelect.appendChild(nuevaOption);
+    }
 
+    // Mostrar/ocultar el input de nueva categoría
+    document.getElementById("categoriaSelect").addEventListener("change", function() {
+      const nuevaCategoriaContainer = document.getElementById("nuevaCategoriaContainer");
+      if (this.value === "nueva") {
+        nuevaCategoriaContainer.style.display = "block";
+      } else {
+        nuevaCategoriaContainer.style.display = "none";
+      }
+    });
+
+    function openModal(mode, id = null) {
+      document.getElementById("productModal").style.display = "block";
+      document.getElementById("formMode").value = mode;
+      document.getElementById("modalTitle").textContent = mode === "add" ? "Agregar Producto" : "Editar Producto";
+      document.getElementById("submitBtn").textContent = mode === "add" ? "Agregar Producto" : "Editar Producto";
+      
+      if (mode === "edit" && id) {
+        const product = productsData.find(p => p.id.toString() === id.toString());
+        if (product) {
+          document.getElementById("productoId").value = product.id;
+          document.getElementById("nombre").value = product.nombre;
+          document.getElementById("precio").value = product.precio;
+          // Si la categoría del producto existe en el select, se asigna; de lo contrario, se muestra como nueva categoría
+          const categoriaSelect = document.getElementById("categoriaSelect");
+          const existsOption = Array.from(categoriaSelect.options).some(opt => opt.value === product.categoria);
+          if (existsOption) {
+            categoriaSelect.value = product.categoria;
+            document.getElementById("nuevaCategoriaContainer").style.display = "none";
+          } else {
+            categoriaSelect.value = "nueva";
+            document.getElementById("nuevaCategoriaContainer").style.display = "block";
+            document.getElementById("nuevaCategoria").value = product.categoria;
+          }
+          document.getElementById("descripcion").value = product.descripcion;
+          document.getElementById("imagen").value = product.imagen;
+          document.getElementById("productoId").disabled = true;
+          document.getElementById("cancelEdit").style.display = "inline";
+        }
+      } else {
+        resetForm();
+      }
+    }
+
+    function closeModal() {
+      document.getElementById("productModal").style.display = "none";
+    }
+
+    document.getElementById("productForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const mode = document.getElementById("formMode").value;
+      const productoId = document.getElementById("productoId").value;
+      const nombre = document.getElementById("nombre").value;
+      const precio = document.getElementById("precio").value;
+      const descripcion = document.getElementById("descripcion").value;
+      const imagen = document.getElementById("imagen").value;
+      
+      // Verificar si se seleccionó la opción "Nueva Categoría"
+      const categoriaSelect = document.getElementById("categoriaSelect").value;
+      let categoria;
+      if (categoriaSelect === "nueva") {
+        categoria = document.getElementById("nuevaCategoria").value.trim();
+      } else {
+        categoria = categoriaSelect;
+      }
+      
+      if (!categoria) {
+        showMessage("Debe seleccionar o ingresar una categoría.", true);
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append("productoId", productoId);
+      formData.append("nombre", nombre);
+      formData.append("precio", precio);
+      formData.append("categoria", categoria);
+      formData.append("descripcion", descripcion);
+      formData.append("imagen", imagen);
+      
+      if (mode === "add") {
+        formData.append("id", "agregarProducto");
+      } else if (mode === "edit") {
+        formData.append("id", "editarProducto");
+      }
+      
+      try {
+        const response = await fetch(GAS_URL, { method: "POST", body: formData });
+        const result = await response.json();
+        if (result.status === "success") {
+          showMessage(result.message);
+          resetForm();
+          closeModal();
+          loadProducts();
+        } else {
+          showMessage(result.message, true);
+        }
+      } catch (error) {
+        showMessage(error.message, true);
+      }
+    });
+
+    async function deleteProduct(id) {
+      if (!confirm("¿Está seguro de eliminar este producto?")) return;
+      const formData = new FormData();
+      formData.append("id", "eliminarProducto");
+      formData.append("productoId", id);
+      
+      try {
+        const response = await fetch(GAS_URL, { method: "POST", body: formData });
+        const result = await response.json();
+        if (result.status === "success") {
+          showMessage(result.message);
+          loadProducts();
+        } else {
+          showMessage(result.message, true);
+        }
+      } catch (error) {
+        showMessage(error.message, true);
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("productForm").reset();
+      document.getElementById("formMode").value = "add";
+      document.getElementById("submitBtn").textContent = "Agregar Producto";
+      document.getElementById("cancelEdit").style.display = "none";
+      document.getElementById("productoId").disabled = false;
+      // Reiniciar select y ocultar el campo de nueva categoría
+      document.getElementById("categoriaSelect").selectedIndex = 0;
+      document.getElementById("nuevaCategoriaContainer").style.display = "none";
+      document.getElementById("nuevaCategoria").value = "";
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById("productModal");
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+
+    loadProducts();
+  </script>
 </body>
-
 </html>
