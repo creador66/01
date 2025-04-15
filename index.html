@@ -82,6 +82,7 @@
       height: 100%;
       background-color: rgba(0,0,0,0.5);
       padding: 1rem;
+      overflow: auto;
     }
 
     .modal-content {
@@ -220,7 +221,6 @@
       font-weight: bold;
       margin-bottom: 0.5rem;
       color: red;
-      font-size: ;
     }
     .card .actions button {
       padding: 0.4rem;
@@ -284,8 +284,11 @@
         <label for="descripcion">Descripción:</label>
         <textarea id="descripcion"></textarea>
         
-        <label for="imagen">URL de la Imagen:</label>
-        <input type="text" id="imagen">
+        <!-- Se reemplaza el input de URL de la imagen por un input file y un input hidden para el Base64 -->
+        <label for="fileInput">Selecciona una imagen:</label>
+        <input type="file" id="fileInput" accept="image/*">
+        <!-- Campo hidden donde se guardará la imagen en Base64 -->
+        <input type="hidden" id="imagen">
         
         <button type="submit" id="submitBtn">Agregar Producto</button>
         <button type="button" id="cancelEdit" onclick="resetForm(); closeModal()" style="display: none;">Cancelar Edición</button>
@@ -294,9 +297,10 @@
   </div>
 
   <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxbUpFOZFzpPHy8NKr5_2s9EO9eD048G4ep1eqN9QKM_Jbdifz8aujVi3v8ym_HrBV0/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxx7tP2aG_25VC1OLL-xvGiCO4MSSdGM7B7OnBHVPtU-_VTGXINaqZtCKfbZImydIDL9w/exec";
     let productsData = [];
 
+    // Función para mostrar mensajes al usuario
     function showMessage(msg, isError = false) {
       const messageDiv = document.getElementById("message");
       messageDiv.textContent = msg;
@@ -307,8 +311,9 @@
       }, 3000);
     }
 
+    // Cargar productos
     async function loadProducts() {
-      // Cargar productos desde localStorage
+      // Cargar desde localStorage
       const storedProducts = localStorage.getItem("productsData");
       if (storedProducts) {
         productsData = JSON.parse(storedProducts);
@@ -316,7 +321,7 @@
         populateCategorySelect(productsData);
       }
       
-      // Petición al servidor para obtener productos actualizados
+      // Solicitar productos actualizados al servidor
       try {
         const formData = new FormData();
         formData.append("id", "obtenerMenu");
@@ -335,6 +340,7 @@
       }
     }
 
+    // Mostrar productos en pantalla
     function populateProducts(products) {
       const productsCards = document.getElementById("productsCards");
       productsCards.innerHTML = "";
@@ -356,12 +362,10 @@
       });
     }
 
-    // Función para extraer las categorías únicas y poblar el select
+    // Rellenar select de categorías únicas
     function populateCategorySelect(products) {
       const categoriaSelect = document.getElementById("categoriaSelect");
-      // Limpiar opciones actuales
       categoriaSelect.innerHTML = "";
-      // Extraer categorías únicas
       const categoriasUnicas = [];
       products.forEach(product => {
         const categoria = product.categoria.trim();
@@ -370,13 +374,11 @@
         }
       });
       
-      // Crear opción por defecto
       const defaultOption = document.createElement("option");
       defaultOption.value = "";
       defaultOption.textContent = "-- Seleccionar Categoría --";
       categoriaSelect.appendChild(defaultOption);
       
-      // Agregar cada categoría única
       categoriasUnicas.forEach(categoria => {
         const option = document.createElement("option");
         option.value = categoria;
@@ -384,14 +386,13 @@
         categoriaSelect.appendChild(option);
       });
       
-      // Agregar opción para "nueva categoría"
       const nuevaOption = document.createElement("option");
       nuevaOption.value = "nueva";
       nuevaOption.textContent = "Nueva Categoría";
       categoriaSelect.appendChild(nuevaOption);
     }
 
-    // Mostrar/ocultar el input de nueva categoría
+    // Mostrar u ocultar el input de nueva categoría
     document.getElementById("categoriaSelect").addEventListener("change", function() {
       const nuevaCategoriaContainer = document.getElementById("nuevaCategoriaContainer");
       if (this.value === "nueva") {
@@ -401,6 +402,20 @@
       }
     });
 
+    // Listener para el input file y conversión a Base64
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = function() {
+          // El resultado incluye el prefijo "data:image/png;base64,..." u otro según el tipo
+          document.getElementById('imagen').value = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Abrir modal de agregar/editar
     function openModal(mode, id = null) {
       document.getElementById("productModal").style.display = "block";
       document.getElementById("formMode").value = mode;
@@ -413,7 +428,6 @@
           document.getElementById("productoId").value = product.id;
           document.getElementById("nombre").value = product.nombre;
           document.getElementById("precio").value = product.precio;
-          // Si la categoría del producto existe en el select, se asigna; de lo contrario, se muestra como nueva categoría
           const categoriaSelect = document.getElementById("categoriaSelect");
           const existsOption = Array.from(categoriaSelect.options).some(opt => opt.value === product.categoria);
           if (existsOption) {
@@ -425,6 +439,7 @@
             document.getElementById("nuevaCategoria").value = product.categoria;
           }
           document.getElementById("descripcion").value = product.descripcion;
+          // Se asigna la imagen en Base64 si se desea recargar, de lo contrario se puede dejar en blanco para que el usuario seleccione otra
           document.getElementById("imagen").value = product.imagen;
           document.getElementById("productoId").disabled = true;
           document.getElementById("cancelEdit").style.display = "inline";
@@ -434,10 +449,12 @@
       }
     }
 
+    // Cerrar modal
     function closeModal() {
       document.getElementById("productModal").style.display = "none";
     }
 
+    // Envío del formulario
     document.getElementById("productForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const mode = document.getElementById("formMode").value;
@@ -445,9 +462,10 @@
       const nombre = document.getElementById("nombre").value;
       const precio = document.getElementById("precio").value;
       const descripcion = document.getElementById("descripcion").value;
+      // El campo "imagen" ya contiene la cadena Base64 generada
       const imagen = document.getElementById("imagen").value;
       
-      // Verificar si se seleccionó la opción "Nueva Categoría"
+      // Seleccionar o ingresar categoría
       const categoriaSelect = document.getElementById("categoriaSelect").value;
       let categoria;
       if (categoriaSelect === "nueva") {
@@ -491,6 +509,7 @@
       }
     });
 
+    // Función para eliminar producto
     async function deleteProduct(id) {
       if (!confirm("¿Está seguro de eliminar este producto?")) return;
       const formData = new FormData();
@@ -511,6 +530,7 @@
       }
     }
 
+    // Reiniciar formulario
     function resetForm() {
       document.getElementById("productForm").reset();
       document.getElementById("formMode").value = "add";
@@ -523,6 +543,7 @@
       document.getElementById("nuevaCategoria").value = "";
     }
 
+    // Cerrar modal al hacer click fuera del contenido
     window.onclick = function(event) {
       const modal = document.getElementById("productModal");
       if (event.target === modal) {
